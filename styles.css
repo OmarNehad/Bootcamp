@@ -1,0 +1,35 @@
+/* .product-number {
+  border-top-left-radius: 15%;
+}
+.product-total {
+} */
+.product-num {
+  padding: 0;
+}
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+.cart {
+  border-radius: 2%;
+  margin: 20px;
+  height: 500px;
+}
+.total-cart {
+  background-color: blue;
+  color: white;
+}
+td,
+th {
+  text-align: center;
+  padding: 8px;
+}
+th {
+  background-color: blue;
+  color: white;
+}
+tbody {
+  overflow-y: scroll;
+  width: 100%;
+}

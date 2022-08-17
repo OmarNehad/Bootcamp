@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="main.js"></script>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <span style="width: 25%">Serial number:</span>
+    <input
+      style="width: 75%; height: 50px"
+      type="text"
+      id="serial-text"
+      placeholder="Check the console for all products' serial numbers"
+    />
+    <div class="cart">
+      <table>
+        <tr>
+          <th class="product-number"></th>
+          <th>IN CART</th>
+          <th>PRICE</th>
+          <th>QUANTITY</th>
+          <th class="product-total">TOTAL</th>
+        </tr>
+      </table>
+    </div>
+    <div class="total-cart">
+      <p style="display: inline; text-align: left">Total to pay</p>
+      <p style="display: inline; text-align: center" id="total">0$</p>
+    </div>
+  </body>
+</html>
