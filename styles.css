@@ -5,6 +5,7 @@
 } */
 .product-num {
   padding: 0;
+  color: grey;
 }
 table {
   font-family: arial, sans-serif;
@@ -12,9 +13,10 @@ table {
   width: 100%;
 }
 .cart {
-  border-radius: 2%;
   margin: 20px;
-  height: 500px;
+  border: 2px solid grey;
+  height: 300px;
+  overflow-y: scroll;
 }
 .total-cart {
   background-color: blue;
@@ -28,8 +30,4 @@ th {
 th {
   background-color: blue;
   color: white;
-}
-tbody {
-  overflow-y: scroll;
-  width: 100%;
 }

@@ -10,14 +10,34 @@ const Products = {
   134: ["Eggs", 100.99, 0, 0],
   135: ["Chicken", 33.99, 0, 0],
 };
-var rows,
-  Total = 0;
-var serialNum, product;
+var rows = 0;
+var Total = 0;
+let serialNum, product;
 $(document).ready(function () {
   console.log(Object.keys(Products));
   // Managing searching for a product
   //
+  $("#order").click(function () {
+    alert(
+      "Ordered successfully submitted, you can view it in the console and you can order another order"
+    );
 
+    Object.keys(Products).forEach((key) => {
+      if (Products[key][2] != 0) {
+        console.log(
+          "you ordered " + Products[key][2] + " of " + Products[key][0]
+        );
+      }
+    });
+    $(".product").remove();
+    Total = 0;
+    $("#total").text("0$");
+
+    Object.keys(Products).forEach((key) => {
+      Products[key][2] = 0;
+      Products[key][3] = 0;
+    });
+  });
   $("#serial-text").on("input", function () {
     serialNum = parseInt($(this).val());
     product = Products[serialNum];
@@ -48,7 +68,7 @@ function updateProduct(serialNum, product, isMore) {
     rows++;
     $("tbody").append(
       `
-      <tr id="${serialNum}">
+      <tr class="product" id="${serialNum}">
       <td class="product-num">${rows}</td>
         <td class="product-details">${product[0]}  </td>
         <td class="product-price">${product[1]}$</td>
