@@ -1,101 +1,101 @@
 // FORMAT: SERIAL NUMBER : [QUANTITY, TOTAL]
 const Cart = {};
 var rows = 0;
-var Total = 0;
+var cartTotal = 0;
 var serialNum, product;
 var Products = {};
-$(document).ready(function () {
-  $("#serial-button").click(() => {
+$(document).ready(() => {
+  $("#serial-button").click(async () => {
     serialNum = parseInt($("#serial-text").val());
-    //var Products = {};
-    fetchProduct(serialNum);
+    let product = await fetchProduct(serialNum);
+    if (!Cart[serialNum]) NewCartItem(serialNum, product);
+    else IncreaseQuantity(serialNum, product);
   });
   $("#order").click(() => {
     alert(
       "Ordered successfully submitted, you can view it in the console and you can order another order"
     );
     $(".product").remove();
-    Total = 0;
+    cartTotal = 0;
     $("#total").text("0$");
     // TODO: SAVE TO DATABASE
   });
 });
 
-$(document).on("click", "#minus", () => {
-  serialNum = parseInt($(this).parent().parent().attr("id"));
-  DecreaseQuantity(serialNum);
-});
-$(document).on("click", "#plus", () => {
-  serialNum = parseInt($(this).parent().parent().attr("id"));
-  IncreaseQuantity(serialNum);
-});
+// $(document).on("click", "#minus", async () => {
+//   serialNum = parseInt($(this).parent().parent().attr("id"));
+//   let product = await fetchProduct(serialNum);
+//   DecreaseQuantity(serialNum, product);
+// });
+// $(document).on("click", "#plus", async () => {
+//   serialNum = parseInt($(this).parent().parent().attr("id"));
+//   let product = await fetchProduct(serialNum);
+//   IncreaseQuantity(serialNum, product);
+// });
 
-function IncreaseQuantity(serialNum) {
-  let product = Products[serialNum];
-  if ($("#" + serialNum).length == 0) {
-    NewCartItem(serialNum);
-  }
-  // UPDATING EXISITING CART ITEM
-  else {
-    let cartItem = Cart[serialNum];
-    cartItem[0] += 1;
-    cartItem[1] += product[1];
-    Total += product[1];
-
-    updateCartTable(serialNum, cartItem);
-  }
+function IncreaseQuantity(serialNum, productPrice) {
+  let cartItem = Cart[serialNum];
+  cartItem.quantity += 1;
+  cartItem.total += productPrice;
+  cartTotal += productPrice;
+  updateCartTable(serialNum, cartItem);
 }
 
-function DecreaseQuantity(serialNum) {
-  let product = Products[serialNum];
+function DecreaseQuantity(serialNum, productPrice) {
   let cartItem = Cart[serialNum];
-  cartItem[0] -= 1;
-  cartItem[1] -= product[1];
-  Total -= product[1];
+  cartItem.quantity -= 1;
+  //let productPrice = cartItem.total/cartItem.quantity;
+  cartItem.total -= productPrice;
+  cartTotal -= productPrice;
 
-  if (cartItem[0] == 0) {
+  if (cartItem.quantity == 0) {
     $("#" + serialNum).remove();
     rows--;
   }
   updateCartTable(serialNum, cartItem);
 }
 
-function NewCartItem(serialNum) {
-  let product = Products[serialNum];
-  Cart[serialNum] = [1, product[1]];
+function NewCartItem(serialNum, product) {
+  Cart[serialNum] = {};
   let cartItem = Cart[serialNum];
-  Total += product[1];
+  cartItem.quantity = 1;
+  cartItem.total = product.price;
+  cartTotal += product.price;
   rows++;
 
   $("tbody").append(
     `
     <tr class="product" id="${serialNum}">
     <td class="product-num">${rows}</td>
-      <td class="product-details">${product[0]}  </td>
-      <td class="product-price">${product[1]}$</td>
+      <td class="product-details">${product.name}  </td>
+      <td class="product-price">${product.price}$</td>
       <td class="product-quantity">
-        <button id="plus">+</button>
-        <span>${cartItem[0]}</span>
-        <button id="minus">-</button>
+        <button id="plus" onClick='IncreaseQuantity(${serialNum},${
+      product.price
+    })' >+</button>
+        <span>${cartItem.quantity}</span>
+        <button id="minus" onClick='DecreaseQuantity(${serialNum},${
+      product.price
+    })' >-</button>
       </td>
-      <td class="product-total">${cartItem[1].toFixed(2)}</td>
+      <td class="product-total">${cartItem.total.toFixed(2)}</td>
     </tr>`
   );
-  $("#total").text(Total.toFixed(2) + "$");
+  $("#total").text(cartTotal.toFixed(2) + "$");
 }
 
 function updateCartTable(serialNum, cartItem) {
-  $("#" + serialNum + " .product-quantity span").text(cartItem[0]);
-  $("#" + serialNum + " .product-total").text(cartItem[1].toFixed(2));
-  $("#total").text(Total.toFixed(2) + "$");
+  $("#" + serialNum + " .product-quantity span").text(cartItem.quantity);
+  $("#" + serialNum + " .product-total").text(cartItem.total.toFixed(2));
+  $("#total").text(cartTotal.toFixed(2) + "$");
 }
 
 async function fetchProduct(id) {
   const response = await fetch("/products/" + id);
   try {
-    const product = await response.json();
-    //IncreaseQuantity();
+    return await response.json();
   } catch {
     alert("Serial Number not found");
+    return null;
   }
 }
