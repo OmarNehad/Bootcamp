@@ -3,7 +3,6 @@ var Cart = {};
 var rows = 0;
 var cartTotal = 0;
 var serialNum, product;
-var Products = {};
 $(document).ready(() => {
   $("#serial-button").click(async () => {
     serialNum = parseInt($("#serial-text").val());
