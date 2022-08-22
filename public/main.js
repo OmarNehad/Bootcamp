@@ -55,6 +55,7 @@ function DecreaseQuantity(serialNum, productPrice) {
 
   if (cartItem.quantity == 0) {
     $("#" + serialNum).remove();
+    Cart[serialNum] = null;
     rows--;
   }
   updateCartTable(serialNum, cartItem);
