@@ -1,0 +1,22 @@
+{
+  "name": "bootcamp",
+  "version": "1.0.0",
+  "description": "restful api for the bootcamp app",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OmarNehad/Bootcamp.git"
+  },
+  "author": "Omar Kasim",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OmarNehad/Bootcamp/issues"
+  },
+  "homepage": "https://github.com/OmarNehad/Bootcamp#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
