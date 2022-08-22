@@ -1,5 +1,5 @@
 // FORMAT: SERIAL NUMBER : [QUANTITY, TOTAL]
-const Cart = {};
+var Cart = {};
 var rows = 0;
 var cartTotal = 0;
 var serialNum, product;
@@ -8,30 +8,36 @@ $(document).ready(() => {
   $("#serial-button").click(async () => {
     serialNum = parseInt($("#serial-text").val());
     let product = await fetchProduct(serialNum);
-    if (!Cart[serialNum]) NewCartItem(serialNum, product);
-    else IncreaseQuantity(serialNum, product);
+    if (product) {
+      if (!Cart[serialNum]) NewCartItem(serialNum, product);
+      else IncreaseQuantity(serialNum, product.price);
+    }
   });
   $("#order").click(() => {
-    alert(
-      "Ordered successfully submitted, you can view it in the console and you can order another order"
-    );
+    if ($(".product").length == 0) {
+      alert("Cart is empty");
+      return;
+    }
+
     $(".product").remove();
     cartTotal = 0;
     $("#total").text("0$");
     // TODO: SAVE TO DATABASE
+
+    $.ajax({
+      url: "/order",
+      type: "POST",
+      contentType: "application/json",
+      data: JSON.stringify({ order: Cart }),
+      success: function (response) {
+        alert(
+          "Ordered successfully submitted, you can view it in the console and you can order another order"
+        );
+      },
+    });
+    Cart = {};
   });
 });
-
-// $(document).on("click", "#minus", async () => {
-//   serialNum = parseInt($(this).parent().parent().attr("id"));
-//   let product = await fetchProduct(serialNum);
-//   DecreaseQuantity(serialNum, product);
-// });
-// $(document).on("click", "#plus", async () => {
-//   serialNum = parseInt($(this).parent().parent().attr("id"));
-//   let product = await fetchProduct(serialNum);
-//   IncreaseQuantity(serialNum, product);
-// });
 
 function IncreaseQuantity(serialNum, productPrice) {
   let cartItem = Cart[serialNum];
@@ -44,7 +50,7 @@ function IncreaseQuantity(serialNum, productPrice) {
 function DecreaseQuantity(serialNum, productPrice) {
   let cartItem = Cart[serialNum];
   cartItem.quantity -= 1;
-  //let productPrice = cartItem.total/cartItem.quantity;
+
   cartItem.total -= productPrice;
   cartTotal -= productPrice;
 
